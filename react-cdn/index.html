@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+        <!-- ReactDOM -->
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+        <!-- Babel para procesar JSX -->
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    </head>
+    <body>
+        <div id="root"></div>
+        <script type="text/babel">
+            const CommentForm = ({ onSubmit }) => {
+                const [comment, setComment] = React.useState("");
+                
+                const handleSubmit = (e) => {
+                    e.preventDefault();
+                    if (comment.trim()) {
+                    onSubmit(comment);
+                    setComment("");
+                    }
+                };
+                
+                return (
+                    <form onSubmit={handleSubmit}>
+                    <textarea
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                        placeholder="Escribe un comentario..."
+                        required
+                    />
+                    <br />
+                    <button type="submit">Enviar Comentario</button>
+                    </form>
+                );
+            }
+
+            const App = () => {
+                const [comentarios, setComentarios] = React.useState([]);
+            
+                const handleCommentSubmit = (newComment) => {
+                    setComentarios((prevComentarios) => [...prevComentarios, newComment]);
+                }
+            
+                return (
+                    <div>
+                        <h1>Comentarios</h1>
+                        <CommentForm onSubmit={handleCommentSubmit}/>
+                        <ul>
+                            {comentarios.map((comentario, index) => (
+                                <li key={index}>{comentario}</li>
+                            ))}
+                        </ul>
+                    </div>
+                );
+            }
+
+            ReactDOM.createRoot(document.getElementById("root")).render(
+                <React.StrictMode>
+                    <App/>
+                </React.StrictMode>
+            )
+        </script>
+        <script type="text/babel" >
+            
+        </script>
+        
+    </body>
+</html>
