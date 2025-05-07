@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>useMemo</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+        <!-- ReactDOM -->
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+        <!-- Babel para procesar JSX -->
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    </head>
+    <body>
+        <div id="root"></div>
+        <script type="text/babel">
+            const initialUsers = [
+            {
+                name: "Monkey D. Luffy",
+                description: "Sueña con convertirse en el Rey de los Piratas."
+            },
+            {
+                name: "Roronoa Zoro",
+                description: "Espadachín leal que busca ser el mejor del mundo."
+            },
+            {
+                name: "Nami",
+                description: "Navegante experta con una pasión por los mapas y el dinero."
+            },
+            {
+                name: "Sanji",
+                description: "Cocinero del barco con habilidades de combate y gran amor por las mujeres."
+            },
+            {
+                name: "Tony Tony Chopper",
+                description: "Doctor reno que comió una Fruta del Diablo y habla como humano."
+            },
+            {
+                name: "Nico Robin",
+                description: "Arqueóloga misteriosa que puede hacer florecer partes de su cuerpo en cualquier lugar."
+            },
+            {
+                name: "Franky",
+                description: "Ciborg y carpintero que construyó el barco Thousand Sunny."
+            },
+            {
+                name: "Brook",
+                description: "Músico esqueleto que revive gracias a la Fruta Revive-Revive."
+            },
+            {
+                name: "Jinbe",
+                description: "Hombre-pez maestro del karate del mar, timonel del barco."
+            }
+            ];
+
+
+            const UserSearch = () => {
+                const [search, setSearch] = React.useState("");
+                const [usuarioForm, setUsuarioForm] = React.useState({ name: "", description: "" });
+                const [usuarios, setUsuarios] = React.useState(initialUsers);
+                
+                const filteredUsuarios = React.useMemo(
+                    () => usuarios.filter(
+                        usuario => usuario.name.toLowerCase().includes(search.toLowerCase()) || 
+                                   usuario.description.toLowerCase().includes(search.toLowerCase())
+                    ),
+                    [usuarios, search]
+                );
+                
+                const handleSubmit = (e) => {
+                    e.preventDefault();
+                    if (usuarioForm.name && usuarioForm.description) {
+                        setUsuarios([ usuarioForm,...usuarios]);
+                        setUsuarioForm({ name: "", description: "" });
+                    }
+                };
+            
+                return (
+                    <div>
+                        <h1>Usuarios</h1>
+                        <input type="text" value={usuarioForm.name} onChange={(e) => setUsuarioForm({ ...usuarioForm, name: e.target.value })} placeholder="Nombre" />
+                        <input type="text" value={usuarioForm.description} onChange={(e) => setUsuarioForm({ ...usuarioForm, description: e.target.value })} placeholder="Descripción" />
+                        <button onClick={handleSubmit}>Agregar Usuario</button>
+                        <br/>
+                        <label>Buscar:</label>
+                        <input type="text" value={search} onChange={(e) => setSearch(e.target.value) }/>
+                        <ul>
+                            {filteredUsuarios.map((usuario, index) => (
+                                <li key={index}>
+                                    <h2>{usuario.name}</h2>
+                                    <p>{usuario.description}</p>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                );
+            }
+
+            ReactDOM.createRoot(document.getElementById("root")).render(
+                <React.StrictMode>
+                    <UserSearch />
+                </React.StrictMode>
+            )
+        </script>
+        <script type="text/babel" >
+            
+        </script>
+        
+    </body>
+</html>

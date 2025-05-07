@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>useRef</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+        <!-- ReactDOM -->
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+        <!-- Babel para procesar JSX -->
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    </head>
+    <body>
+        <div id="root"></div>
+        <script type="text/babel">
+            
+
+
+            function Stopwatch() {
+                const [time, setTime] = React.useState(0);
+                const [isRunning, setIsRunning] = React.useState(false);
+                const [sessions, setSessions] = React.useState([]);
+                const intervalRef = React.useRef(null);
+              
+    
+                React.useEffect(() => {
+                  if (isRunning) {
+                    intervalRef.current = setInterval(() => {
+                      setTime((prevTime) => prevTime + 1);
+                    }, 1000);
+                  }
+              
+                  return () => {
+                    clearInterval(intervalRef.current);
+                  };
+                }, [isRunning]);
+              
+                const toggleTimer = () => {
+                  setIsRunning((prev) => !prev);
+                };
+              
+                const resetTimer = () => {
+                  clearInterval(intervalRef.current);
+                  setIsRunning(false);
+                  setTime(0);
+                };
+              
+                const saveSession = () => {
+                  setSessions((prevSessions) => [...prevSessions, time]);
+                };
+              
+                const formatTime = (seconds) => {
+                  const mins = Math.floor(seconds / 60);
+                  const secs = seconds % 60;
+                  return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                };
+              
+                return (
+                  <div>
+                    <h2>Stopwatch</h2>
+                    <h1>{formatTime(time)}</h1>
+                    <div >
+                      <button onClick={toggleTimer}>
+                        {isRunning ? 'Pausar' : 'Iniciar'}
+                      </button>
+                      <button onClick={resetTimer} >
+                        Reiniciar
+                      </button>
+                      <button onClick={saveSession}>
+                        Guardar sesión
+                      </button>
+                    </div>
+                    <h3>Sesiones guardadas:</h3>
+                    <ul>
+                      {sessions.map((s, index) => (
+                        <li key={index}>
+                          Sesión {index + 1}: {formatTime(s)}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                );
+              }
+              
+            ReactDOM.createRoot(document.getElementById("root")).render(
+                <React.StrictMode>
+                    <Stopwatch />
+                </React.StrictMode>
+            )
+        </script>
+        <script type="text/babel" >
+            
+        </script>
+        
+    </body>
+</html>
