@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>useContext</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+        <!-- ReactDOM -->
+        <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+        <!-- Babel para procesar JSX -->
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    </head>
+    <body>
+        <div id="root"></div>
+        <script type="text/babel">
+            
+
+            const ThemeContext = React.createContext();
+
+            const ThemeProvider = ({ children }) => {
+                const [theme, setTheme] = React.useState("light");
+
+                const toggleTheme = () => {
+                    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+                };
+
+                return (
+                    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+                        {children}
+                    </ThemeContext.Provider>
+                );
+            };
+
+            const ThemeToggle = () => {
+                const { theme, toggleTheme } = React.useContext(ThemeContext);
+
+                return (
+                    <button
+                        onClick={toggleTheme}
+                        className={`bg-${theme === "light" ? "blue" : "gray"}-500 hover:bg-${
+                            theme === "light" ? "blue" : "gray"
+                        }-600 text-white px-4 py-2 rounded-full`}
+                    >
+                        Cambiar a {theme === "light" ? "Modo Oscuro" : "Modo Claro"}
+                    </button>
+                );
+            };
+
+            const ThemeDisplay = () => {
+                const { theme } = React.useContext(ThemeContext);
+                return (
+                    <div className={`flex items-center text-center justify-center h-screen`}>
+                        <div className={`w-1/2 p-4 ${theme === "light" ? "bg-white" : "bg-gray-800"} rounded-lg shadow-lg`}>
+                            <h1 className={`text-2xl ${theme === "light" ? "text-gray-800" : "text-white"}`}>Tema actual: {theme}</h1>
+                            <ThemeToggle />
+                        </div>
+                    </div>
+                   
+                );
+            };
+
+            const App = () => {
+                return (
+                    <ThemeDisplay />
+                );
+            };
+
+              
+            ReactDOM.createRoot(document.getElementById("root")).render(
+                <React.StrictMode>
+                    <ThemeProvider>
+                        <App />
+                    </ThemeProvider>
+                </React.StrictMode>
+            )
+        </script>
+        <script type="text/babel" >
+            
+        </script>
+        
+    </body>
+</html>
